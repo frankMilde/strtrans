@@ -9,12 +9,41 @@ import (
 	"github.com/frankMilde/strdel"
 )
 
-// Spaces transforms multiple white spaces into a single white space and
-// removes white space from the start and end of string s.
-func Spaces(s string) string {
+// MultiToSingleSpaces transforms
+// (1) unicode whitespaces into ascii white space,
+// (2) multiple white spaces into a single white space,
+// (3) removes white space from the start and end of string s.
+func MultiToSingleSpaces(s string) string {
+	s = UnicodeToAsciiSpaces(s)
 	regWhiteSpace := regexp.MustCompile(`\s{2,}`)
 	s = regWhiteSpace.ReplaceAllString(s, " ")
+
 	return strings.TrimSpace(s)
+}
+
+// UnicodeToAsciiSpaces transforms all unicode separator and space
+// characters from unicode categroy code [Zs] into the simple ascii spaces.
+// Also see http://www.fileformat.info/info/unicode/category/Zs/list.htm
+func UnicodeToAsciiSpaces(s string) string {
+	s = strings.Replace(s, "\u00A0", " ", -1) // \u00A0 = &nbsp = 'non-breaking space'
+	s = strings.Replace(s, "\u1680", " ", -1) // ogham space mark
+	s = strings.Replace(s, "\u2000", " ", -1) // en quad
+	s = strings.Replace(s, "\u2001", " ", -1) // em quad
+	s = strings.Replace(s, "\u2002", " ", -1) // en space
+	s = strings.Replace(s, "\u2003", " ", -1) // em space
+	s = strings.Replace(s, "\u2004", " ", -1) // three-per-em space
+	s = strings.Replace(s, "\u2005", " ", -1) // four-per-em space
+	s = strings.Replace(s, "\u2006", " ", -1) // six-per-em space
+	s = strings.Replace(s, "\u2007", " ", -1) // figure spacE
+	s = strings.Replace(s, "\u2008", " ", -1) // punctuation space
+	s = strings.Replace(s, "\u2009", " ", -1) // thin space
+	s = strings.Replace(s, "\u200A", " ", -1) // hair space
+	s = strings.Replace(s, "\u202F", " ", -1) // narrow no-break space
+	s = strings.Replace(s, " ", " ", -1)      // narrow no-break space
+	s = strings.Replace(s, "\u205F", " ", -1) // medium mathematical space
+	s = strings.Replace(s, "\u3000", " ", -1) // ideographic space
+
+	return s
 }
 
 // LinebreaksToTwoLinebreaks will reduce all multiple newlines into 2

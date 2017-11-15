@@ -134,10 +134,10 @@ func Test_Spaces_haveSpacesBeforeLinebreaks_spaceAreRemoved(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		got := Spaces(test.In)
+		got := MultiToSingleSpaces(test.In)
 		if !reflect.DeepEqual(test.Want, got) {
 			_, file, line, _ := runtime.Caller(0)
-			fmt.Printf("%s:%d:\n\ncall Spaces(%#v)\n\texp: %#v\n\n\tgot: %#v\n\n",
+			fmt.Printf("%s:%d:\n\ncall MultiToSingleSpaces(%#v)\n\texp: %#v\n\n\tgot: %#v\n\n",
 				filepath.Base(file), line, test.In, test.Want, got)
 			t.FailNow()
 		}
